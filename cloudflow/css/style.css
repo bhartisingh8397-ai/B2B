@@ -772,14 +772,22 @@ button {
   background: #f8fafc;
 }
 
-.trusted-label {
+.trusted-label-wrapper {
   text-align: center;
-  font-size: 0.85rem;
-  font-weight: 700;
+  margin-bottom: var(--space-md);
+}
+
+.trusted-label {
+  display: inline-block;
+  font-size: 0.82rem;
+  font-weight: 800;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--text-subtle);
-  margin-bottom: var(--space-md);
+  color: var(--primary);
+  background: rgba(13, 148, 136, 0.08);
+  border: 1px solid rgba(13, 148, 136, 0.25);
+  padding: 0.4rem 1.25rem;
+  border-radius: var(--radius-full);
 }
 
 .marquee-container {
