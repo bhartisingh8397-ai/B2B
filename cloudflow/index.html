@@ -29,12 +29,16 @@
 
   <title>CloudFlow CRM | Next-Gen AI-Powered B2B Sales & Revenue Platform</title>
 
-  <!-- Google Fonts Preconnect -->
+  <meta name="theme-color" content="#0d9488">
+
+  <!-- Google Fonts Preconnect & Async Load -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap"></noscript>
 
   <!-- Stylesheets -->
+  <link rel="preload" href="css/style.css" as="style">
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/responsive.css">
 
@@ -178,10 +182,10 @@
 
           <div class="hero-social-proof">
             <div class="avatar-group">
-              <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80" alt="User Avatar">
-              <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=100&q=80" alt="User Avatar">
-              <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=100&q=80" alt="User Avatar">
-              <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=100&q=80" alt="User Avatar">
+              <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='50' fill='%230d9488'/><circle cx='50' cy='38' r='18' fill='%23ffffff'/><path d='M22 82c0-15 12-25 28-25s28 10 28 25' fill='%23ffffff'/></svg>" alt="User Avatar" width="36" height="36" loading="lazy" decoding="async">
+              <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='50' fill='%23ff6b35'/><circle cx='50' cy='38' r='18' fill='%23ffffff'/><path d='M22 82c0-15 12-25 28-25s28 10 28 25' fill='%23ffffff'/></svg>" alt="User Avatar" width="36" height="36" loading="lazy" decoding="async">
+              <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='50' fill='%230284c7'/><circle cx='50' cy='38' r='18' fill='%23ffffff'/><path d='M22 82c0-15 12-25 28-25s28 10 28 25' fill='%23ffffff'/></svg>" alt="User Avatar" width="36" height="36" loading="lazy" decoding="async">
+              <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='50' fill='%238b5cf6'/><circle cx='50' cy='38' r='18' fill='%23ffffff'/><path d='M22 82c0-15 12-25 28-25s28 10 28 25' fill='%23ffffff'/></svg>" alt="User Avatar" width="36" height="36" loading="lazy" decoding="async">
             </div>
             <div>
               <div class="rating-stars">★★★★★</div>
@@ -596,7 +600,7 @@
               "CloudFlow transformed our sales operation completely. The AI pipeline forecasting is so accurate it changed how we present revenue projections to our board."
             </p>
             <div class="testimonial-author">
-              <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=120&q=80" alt="Sarah Jenkins" class="author-avatar">
+              <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='50' fill='%230d9488'/><circle cx='50' cy='38' r='18' fill='%23ffffff'/><path d='M22 82c0-15 12-25 28-25s28 10 28 25' fill='%23ffffff'/></svg>" alt="Sarah Jenkins" class="author-avatar" width="48" height="48" loading="lazy" decoding="async">
               <div class="author-info">
                 <h4>Sarah Jenkins</h4>
                 <p>VP of Sales, Vertex Graph</p>
@@ -610,7 +614,7 @@
               "The setup was seamless. We imported 50,000 lead records and had our 40-person sales team up and running in less than two days. Phenomenal UX."
             </p>
             <div class="testimonial-author">
-              <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=120&q=80" alt="Marcus Vance" class="author-avatar">
+              <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='50' fill='%23ff6b35'/><circle cx='50' cy='38' r='18' fill='%23ffffff'/><path d='M22 82c0-15 12-25 28-25s28 10 28 25' fill='%23ffffff'/></svg>" alt="Marcus Vance" class="author-avatar" width="48" height="48" loading="lazy" decoding="async">
               <div class="author-info">
                 <h4>Marcus Vance</h4>
                 <p>Chief Revenue Officer, Novasphere</p>
@@ -624,7 +628,7 @@
               "Our reps used to spend 2 hours a day logging data manually. CloudFlow automated all of it. Our win rates jumped 30% in our first quarter."
             </p>
             <div class="testimonial-author">
-              <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=120&q=80" alt="Elena Rostova" class="author-avatar">
+              <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='50' fill='%230284c7'/><circle cx='50' cy='38' r='18' fill='%23ffffff'/><path d='M22 82c0-15 12-25 28-25s28 10 28 25' fill='%23ffffff'/></svg>" alt="Elena Rostova" class="author-avatar" width="48" height="48" loading="lazy" decoding="async">
               <div class="author-info">
                 <h4>Elena Rostova</h4>
                 <p>Head of Sales Ops, Apex Cloud</p>
@@ -768,6 +772,6 @@
   <button class="back-to-top" aria-label="Back to top">↑</button>
 
   <!-- Script -->
-  <script src="js/script.js"></script>
+  <script src="js/script.js" defer></script>
 </body>
 </html>
