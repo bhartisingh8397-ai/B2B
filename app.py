@@ -179,5 +179,5 @@ def handle_contact_submission():
 # --------------------------------------------------------------------------
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
-    print(f"🚀 CloudFlow CRM Flask Server running on http://127.0.0.1:{port}")
+    print(f"CloudFlow CRM Flask Server running on http://127.0.0.1:{port}")
     app.run(host='0.0.0.0', port=port, debug=True)
