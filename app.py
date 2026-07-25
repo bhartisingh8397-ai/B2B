@@ -9,7 +9,12 @@ from werkzeug.security import generate_password_hash, check_password_hash
 # Initialize Flask application
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 FRONTEND_DIR = os.path.join(BASE_DIR, 'cloudflow')
-DATABASE_PATH = os.path.join(BASE_DIR, 'cloudflow.db')
+
+# Use /tmp for SQLite database in Vercel serverless environment
+if os.environ.get('VERCEL') or os.environ.get('AWS_LAMBDA_FUNCTION_NAME'):
+    DATABASE_PATH = '/tmp/cloudflow.db'
+else:
+    DATABASE_PATH = os.path.join(BASE_DIR, 'cloudflow.db')
 
 app = Flask(__name__, static_folder=FRONTEND_DIR, static_url_path='')
 app.secret_key = os.environ.get('SECRET_KEY', 'cloudflow-secret-key-2026-b2b-saas')
