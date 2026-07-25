@@ -33,12 +33,12 @@
   --grad-card-border: linear-gradient(135deg, rgba(79, 70, 229, 0.3) 0%, rgba(124, 58, 237, 0.15) 50%, rgba(2, 132, 199, 0.3) 100%);
   --grad-glow: radial-gradient(circle at 50% 0%, rgba(79, 70, 229, 0.12), transparent 70%);
 
-  /* High-Contrast Light Theme Text */
+  /* High-Contrast Light Theme Text & Subtle Borders */
   --text-main: #0f172a;
   --text-muted: #475569;
   --text-subtle: #64748b;
   --border-subtle: rgba(226, 232, 240, 0.85);
-  --border-highlight: rgba(79, 70, 229, 0.35);
+  --border-highlight: rgba(79, 70, 229, 0.2);
 
   /* Typography */
   --font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
@@ -60,11 +60,11 @@
   --radius-lg: 30px;
   --radius-full: 9999px;
 
-  /* Elevated Soft Shadows for Light Background */
-  --shadow-sm: 0 4px 12px rgba(15, 23, 42, 0.05);
-  --shadow-md: 0 12px 30px -5px rgba(15, 23, 42, 0.08), 0 4px 6px -2px rgba(15, 23, 42, 0.03);
-  --shadow-lg: 0 25px 50px -12px rgba(15, 23, 42, 0.14);
-  --shadow-glow: 0 0 35px rgba(79, 70, 229, 0.2);
+  /* Soft Natural Shadows for Light Background */
+  --shadow-sm: 0 4px 12px rgba(15, 23, 42, 0.04);
+  --shadow-md: 0 10px 24px -5px rgba(15, 23, 42, 0.06), 0 4px 6px -2px rgba(15, 23, 42, 0.02);
+  --shadow-lg: 0 20px 40px -12px rgba(15, 23, 42, 0.1);
+  --shadow-glow: 0 0 18px rgba(79, 70, 229, 0.06);
 
   /* Transitions */
   --transition-fast: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
@@ -201,9 +201,9 @@ button {
 }
 
 .glass-card:hover {
-  transform: translateY(-5px);
-  border-color: var(--border-highlight);
-  box-shadow: var(--shadow-md), 0 0 25px rgba(79, 70, 229, 0.12);
+  transform: translateY(-4px);
+  border-color: rgba(79, 70, 229, 0.25);
+  box-shadow: var(--shadow-md), 0 4px 15px rgba(79, 70, 229, 0.05);
 }
 
 .glass-card::before {
@@ -239,14 +239,14 @@ button {
 .btn-primary {
   background: var(--grad-primary);
   color: #ffffff;
-  box-shadow: 0 4px 20px rgba(79, 70, 229, 0.35);
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 4px 14px rgba(79, 70, 229, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .btn-primary:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 30px rgba(79, 70, 229, 0.5);
-  filter: brightness(1.08);
+  box-shadow: 0 6px 20px rgba(79, 70, 229, 0.3);
+  filter: brightness(1.05);
 }
 
 .btn-secondary {
@@ -846,10 +846,10 @@ button {
 }
 
 .glass-card:hover .feature-icon-wrapper {
-  transform: scale(1.1) rotate(4deg);
+  transform: scale(1.08) rotate(3deg);
   background: var(--grad-primary);
   color: #ffffff;
-  box-shadow: 0 4px 20px rgba(79, 70, 229, 0.35);
+  box-shadow: 0 4px 14px rgba(79, 70, 229, 0.18);
 }
 
 .feature-icon-wrapper svg { width: 28px; height: 28px; stroke: currentColor; stroke-width: 2; fill: none; }
