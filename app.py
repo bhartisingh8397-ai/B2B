@@ -10,6 +10,9 @@ from werkzeug.security import generate_password_hash, check_password_hash
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 FRONTEND_DIR = os.path.join(BASE_DIR, 'cloudflow')
 
+if not os.path.exists(FRONTEND_DIR):
+    FRONTEND_DIR = os.path.join(os.getcwd(), 'cloudflow')
+
 # Use /tmp for SQLite database in Vercel serverless environment
 if os.environ.get('VERCEL') or os.environ.get('AWS_LAMBDA_FUNCTION_NAME'):
     DATABASE_PATH = '/tmp/cloudflow.db'
