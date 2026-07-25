@@ -1,0 +1,165 @@
+/* ==========================================================================
+   CloudFlow CRM - Responsive Stylesheet
+   Breakpoints: 1200px (Desktop), 992px (Tablet Large), 768px (Tablet Small), 576px (Mobile)
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. Large Desktop & Laptops (< 1200px)
+   -------------------------------------------------------------------------- */
+@media (max-width: 1200px) {
+  .hero-title {
+    font-size: 3.5rem;
+  }
+  
+  .dashboard-preview {
+    grid-template-columns: 180px 1fr;
+  }
+  
+  .footer-grid {
+    grid-template-columns: 1.5fr repeat(3, 1fr);
+    gap: var(--space-lg);
+  }
+}
+
+/* --------------------------------------------------------------------------
+   2. Tablets & Small Laptops (< 992px)
+   -------------------------------------------------------------------------- */
+@media (max-width: 992px) {
+  :root {
+    --header-height: 70px;
+    --space-2xl: 4rem;
+    --space-xl: 3rem;
+  }
+
+  .nav-links, .nav-actions {
+    display: none;
+  }
+
+  .hamburger-btn {
+    display: flex;
+  }
+
+  .hero-title {
+    font-size: 3rem;
+  }
+
+  .dashboard-preview {
+    grid-template-columns: 1fr;
+  }
+
+  .sidebar-mock {
+    display: none;
+  }
+
+  .tab-content.active {
+    grid-template-columns: 1fr;
+    gap: var(--space-lg);
+  }
+
+  .contact-grid {
+    grid-template-columns: 1fr;
+    gap: var(--space-xl);
+  }
+
+  .footer-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-xl);
+  }
+}
+
+/* --------------------------------------------------------------------------
+   3. Small Tablets & Mobile Devices (< 768px)
+   -------------------------------------------------------------------------- */
+@media (max-width: 768px) {
+  .hero-title {
+    font-size: 2.25rem;
+  }
+
+  .hero-description {
+    font-size: 1rem;
+  }
+
+  .hero-ctas {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .hero-ctas .btn {
+    width: 100%;
+  }
+
+  .metrics-row {
+    grid-template-columns: 1fr;
+  }
+
+  .features-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .metrics-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .testimonials-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .pricing-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .cta-box {
+    padding: var(--space-xl) var(--space-md);
+  }
+
+  .cta-form {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .cta-form .cta-input, .cta-form .btn {
+    width: 100%;
+  }
+
+  .footer-grid {
+    grid-template-columns: 1fr;
+    gap: var(--space-lg);
+  }
+
+  .footer-bottom {
+    flex-direction: column;
+    text-align: center;
+    gap: 1rem;
+  }
+
+  .comparison-table th, .comparison-table td {
+    padding: 0.75rem 0.5rem;
+    font-size: 0.85rem;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   4. Extra Small Mobile (< 480px)
+   -------------------------------------------------------------------------- */
+@media (max-width: 480px) {
+  .hero-title {
+    font-size: 1.85rem;
+  }
+
+  .metrics-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .section-title {
+    font-size: 1.75rem;
+  }
+
+  .tab-btn {
+    width: 100%;
+    text-align: center;
+  }
+
+  .mobile-nav {
+    width: 90%;
+  }
+}

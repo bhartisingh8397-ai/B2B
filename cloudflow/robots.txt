@@ -1,0 +1,6 @@
+# CloudFlow CRM - Search Engine Robot Rules
+User-agent: *
+Allow: /
+
+# Sitemap Location
+Sitemap: https://cloudflowcrm.com/sitemap.xml
