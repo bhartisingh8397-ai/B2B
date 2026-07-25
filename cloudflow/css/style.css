@@ -649,12 +649,52 @@ button {
   font-size: 0.85rem;
   color: var(--text-muted);
   font-weight: 600;
+  cursor: pointer;
+  border: none;
+  width: 100%;
+  text-align: left;
+  transition: all var(--transition-fast);
+}
+
+.side-item:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text-main);
 }
 
 .side-item.active {
   background: rgba(99, 102, 241, 0.2);
   color: var(--primary-light);
   border: 1px solid rgba(99, 102, 241, 0.4);
+}
+
+.dash-view {
+  display: none;
+  animation: fadeIn 0.35s ease forwards;
+}
+
+.dash-view.active {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.ai-prompt-pill {
+  padding: 0.35rem 0.85rem;
+  border-radius: var(--radius-full);
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-muted);
+  font-size: 0.78rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.ai-prompt-pill:hover, .ai-prompt-pill.active {
+  background: var(--accent-purple);
+  color: #ffffff;
+  border-color: transparent;
+  box-shadow: 0 0 15px rgba(168, 85, 247, 0.45);
 }
 
 .side-item-icon {

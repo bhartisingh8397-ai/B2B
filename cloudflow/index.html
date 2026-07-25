@@ -205,54 +205,173 @@
 
             <div class="dashboard-preview">
               <aside class="sidebar-mock">
-                <div class="side-item active">
+                <button class="side-item active" data-dash-tab="dash-revenue" aria-label="View Revenue Hub">
                   <div class="side-item-icon"></div>
                   <span>Revenue Hub</span>
-                </div>
-                <div class="side-item">
+                </button>
+                <button class="side-item" data-dash-tab="dash-pipeline" aria-label="View Leads and Pipeline">
                   <div class="side-item-icon" style="background: var(--secondary);"></div>
                   <span>Leads & Pipeline</span>
-                </div>
-                <div class="side-item">
+                </button>
+                <button class="side-item" data-dash-tab="dash-ai" aria-label="View AI Assistants">
                   <div class="side-item-icon" style="background: var(--accent-purple);"></div>
                   <span>AI Assistants</span>
-                </div>
-                <div class="side-item">
+                </button>
+                <button class="side-item" data-dash-tab="dash-integrations" aria-label="View Integrations">
                   <div class="side-item-icon" style="background: var(--success);"></div>
                   <span>Integrations</span>
-                </div>
+                </button>
               </aside>
 
               <div class="main-mock">
-                <div class="metrics-row">
-                  <div class="metric-mini-card">
-                    <div class="metric-mini-title">Total Arr</div>
-                    <div class="metric-mini-val">$1,420,800</div>
-                    <div class="metric-mini-change">↑ +24.8% vs last month</div>
+                <!-- View 1: Revenue Hub (Active) -->
+                <div class="dash-view active" id="dash-revenue">
+                  <div class="metrics-row">
+                    <div class="metric-mini-card">
+                      <div class="metric-mini-title">Total ARR</div>
+                      <div class="metric-mini-val">$1,420,800</div>
+                      <div class="metric-mini-change">↑ +24.8% vs last month</div>
+                    </div>
+                    <div class="metric-mini-card">
+                      <div class="metric-mini-title">Win Rate</div>
+                      <div class="metric-mini-val">42.6%</div>
+                      <div class="metric-mini-change">↑ +8.2% AI optimized</div>
+                    </div>
+                    <div class="metric-mini-card">
+                      <div class="metric-mini-title">Active Deals</div>
+                      <div class="metric-mini-val">184</div>
+                      <div class="metric-mini-change">↑ 12 closing this week</div>
+                    </div>
                   </div>
-                  <div class="metric-mini-card">
-                    <div class="metric-mini-title">Win Rate</div>
-                    <div class="metric-mini-val">42.6%</div>
-                    <div class="metric-mini-change">↑ +8.2% AI optimized</div>
-                  </div>
-                  <div class="metric-mini-card">
-                    <div class="metric-mini-title">Active Deals</div>
-                    <div class="metric-mini-val">184</div>
-                    <div class="metric-mini-change">↑ 12 closing this week</div>
+
+                  <div class="chart-mock">
+                    <div style="font-size: 0.85rem; font-weight: 700; color: var(--text-main); margin-bottom: 0.5rem;">
+                      Quarterly Revenue Velocity ($)
+                    </div>
+                    <div class="chart-bars">
+                      <div class="bar" style="height: 45%;" data-label="Jan"></div>
+                      <div class="bar" style="height: 60%;" data-label="Feb"></div>
+                      <div class="bar" style="height: 78%;" data-label="Mar"></div>
+                      <div class="bar" style="height: 65%;" data-label="Apr"></div>
+                      <div class="bar" style="height: 88%;" data-label="May"></div>
+                      <div class="bar" style="height: 98%;" data-label="Jun"></div>
+                    </div>
                   </div>
                 </div>
 
-                <div class="chart-mock">
-                  <div style="font-size: 0.85rem; font-weight: 700; color: var(--text-main); margin-bottom: 0.5rem;">
-                    Quarterly Pipeline Revenue Velocity ($)
+                <!-- View 2: Leads & Pipeline -->
+                <div class="dash-view" id="dash-pipeline">
+                  <div class="metrics-row">
+                    <div class="metric-mini-card">
+                      <div class="metric-mini-title">Pipeline Funnel</div>
+                      <div class="metric-mini-val">$2,450,000</div>
+                      <div class="metric-mini-change">↑ 18 Enterprise Deals</div>
+                    </div>
+                    <div class="metric-mini-card">
+                      <div class="metric-mini-title">Qualified Leads</div>
+                      <div class="metric-mini-val">34</div>
+                      <div class="metric-mini-change">↑ High Intent Leads</div>
+                    </div>
+                    <div class="metric-mini-card">
+                      <div class="metric-mini-title">Sales Cycle</div>
+                      <div class="metric-mini-val">14 Days</div>
+                      <div class="metric-mini-change">⚡ 3x Faster Velocity</div>
+                    </div>
                   </div>
-                  <div class="chart-bars">
-                    <div class="bar" style="height: 45%;" data-label="Jan"></div>
-                    <div class="bar" style="height: 60%;" data-label="Feb"></div>
-                    <div class="bar" style="height: 78%;" data-label="Mar"></div>
-                    <div class="bar" style="height: 65%;" data-label="Apr"></div>
-                    <div class="bar" style="height: 88%;" data-label="May"></div>
-                    <div class="bar" style="height: 98%;" data-label="Jun"></div>
+
+                  <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem; margin-top: 0.5rem;">
+                    <div style="background: rgba(15,23,42,0.8); padding: 0.75rem; border-radius: 8px; border-top: 3px solid var(--secondary);">
+                      <div style="font-size: 0.78rem; font-weight: 700; color: var(--secondary); margin-bottom: 0.5rem;">DISCOVERY (2)</div>
+                      <div style="background: rgba(30,41,59,0.7); padding: 0.6rem; border-radius: 6px; margin-bottom: 0.4rem;">
+                        <div style="font-weight: 600; font-size: 0.85rem;">Synthetix AI</div>
+                        <div style="font-size: 0.75rem; color: var(--text-muted);">$85,000 • 70% Win</div>
+                      </div>
+                    </div>
+
+                    <div style="background: rgba(15,23,42,0.8); padding: 0.75rem; border-radius: 8px; border-top: 3px solid var(--primary);">
+                      <div style="font-size: 0.78rem; font-weight: 700; color: var(--primary-light); margin-bottom: 0.5rem;">PROPOSAL (1)</div>
+                      <div style="background: rgba(99,102,241,0.18); padding: 0.6rem; border-radius: 6px; border: 1px solid var(--border-highlight);">
+                        <div style="font-weight: 600; font-size: 0.85rem;">Apex Systems</div>
+                        <div style="font-size: 0.75rem; color: var(--primary-light);">$240,000 • 🔥 AI Priority</div>
+                      </div>
+                    </div>
+
+                    <div style="background: rgba(15,23,42,0.8); padding: 0.75rem; border-radius: 8px; border-top: 3px solid var(--success);">
+                      <div style="font-size: 0.78rem; font-weight: 700; color: var(--success); margin-bottom: 0.5rem;">CLOSED WON (1)</div>
+                      <div style="background: rgba(16,185,129,0.18); padding: 0.6rem; border-radius: 6px; border: 1px solid rgba(16,185,129,0.3);">
+                        <div style="font-weight: 600; font-size: 0.85rem;">Novasphere</div>
+                        <div style="font-size: 0.75rem; color: var(--success);">$175,000 • Signed</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- View 3: AI Assistants -->
+                <div class="dash-view" id="dash-ai">
+                  <div class="metrics-row">
+                    <div class="metric-mini-card">
+                      <div class="metric-mini-title">AI Prompts Run</div>
+                      <div class="metric-mini-val">1,420</div>
+                      <div class="metric-mini-change">🤖 Active AI Co-Pilot</div>
+                    </div>
+                    <div class="metric-mini-card">
+                      <div class="metric-mini-title">Sentiment Score</div>
+                      <div class="metric-mini-val">94%</div>
+                      <div class="metric-mini-change">↑ Positive Engagement</div>
+                    </div>
+                    <div class="metric-mini-card">
+                      <div class="metric-mini-title">Hours Saved</div>
+                      <div class="metric-mini-val">320 hrs</div>
+                      <div class="metric-mini-change">⚡ Auto Follow-ups</div>
+                    </div>
+                  </div>
+
+                  <div style="background: rgba(30,41,59,0.4); padding: 1rem; border-radius: 8px; border: 1px solid var(--border-subtle); margin-top: 0.5rem;">
+                    <div style="font-weight: 700; font-size: 0.85rem; color: var(--accent-purple); margin-bottom: 0.5rem;">🤖 Try Interactive Prompt Triggers:</div>
+                    <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.75rem;">
+                      <button class="ai-prompt-pill active" data-prompt="followup">Draft Follow-Up</button>
+                      <button class="ai-prompt-pill" data-prompt="summary">Summarize Call</button>
+                      <button class="ai-prompt-pill" data-prompt="objection">SOC2 Security Reply</button>
+                    </div>
+                    <div id="ai-output-box" style="background: rgba(15,23,42,0.9); padding: 0.85rem; border-radius: 6px; font-size: 0.85rem; color: var(--text-muted); border: 1px solid var(--border-subtle); min-height: 70px;">
+                      "Hi Sarah, based on Vertex Graph's inquiry regarding enterprise SLA, I've drafted a personalized proposal with our 99.9% uptime packet attached."
+                    </div>
+                  </div>
+                </div>
+
+                <!-- View 4: Integrations -->
+                <div class="dash-view" id="dash-integrations">
+                  <div class="metrics-row">
+                    <div class="metric-mini-card">
+                      <div class="metric-mini-title">Connected Apps</div>
+                      <div class="metric-mini-val">12 / 12</div>
+                      <div class="metric-mini-change">🟢 All Systems Active</div>
+                    </div>
+                    <div class="metric-mini-card">
+                      <div class="metric-mini-title">API Requests</div>
+                      <div class="metric-mini-val">48,200</div>
+                      <div class="metric-mini-change">⚡ High Speed Sync</div>
+                    </div>
+                    <div class="metric-mini-card">
+                      <div class="metric-mini-title">Sync Health</div>
+                      <div class="metric-mini-val">100%</div>
+                      <div class="metric-mini-change">Zero Errors</div>
+                    </div>
+                  </div>
+
+                  <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem; margin-top: 0.5rem;">
+                    <div style="background: rgba(30,41,59,0.5); padding: 0.65rem; border-radius: 6px; border: 1px solid var(--border-subtle); display: flex; align-items: center; gap: 0.5rem;">
+                      <div style="width: 24px; height: 24px; border-radius: 4px; background: rgba(99,102,241,0.2); color: var(--primary-light); font-weight: 800; font-size: 0.75rem; display: flex; align-items: center; justify-content: center;">#</div>
+                      <div><div style="font-weight: 700; font-size: 0.8rem;">Slack</div><div style="font-size: 0.7rem; color: var(--success);">🟢 Synced</div></div>
+                    </div>
+                    <div style="background: rgba(30,41,59,0.5); padding: 0.65rem; border-radius: 6px; border: 1px solid var(--border-subtle); display: flex; align-items: center; gap: 0.5rem;">
+                      <div style="width: 24px; height: 24px; border-radius: 4px; background: rgba(239,68,68,0.2); color: #ef4444; font-weight: 800; font-size: 0.75rem; display: flex; align-items: center; justify-content: center;">M</div>
+                      <div><div style="font-weight: 700; font-size: 0.8rem;">Gmail</div><div style="font-size: 0.7rem; color: var(--success);">🟢 Synced</div></div>
+                    </div>
+                    <div style="background: rgba(30,41,59,0.5); padding: 0.65rem; border-radius: 6px; border: 1px solid var(--border-subtle); display: flex; align-items: center; gap: 0.5rem;">
+                      <div style="width: 24px; height: 24px; border-radius: 4px; background: rgba(6,182,212,0.2); color: var(--secondary); font-weight: 800; font-size: 0.75rem; display: flex; align-items: center; justify-content: center;">S</div>
+                      <div><div style="font-weight: 700; font-size: 0.8rem;">Stripe</div><div style="font-size: 0.7rem; color: var(--success);">🟢 Synced</div></div>
+                    </div>
                   </div>
                 </div>
               </div>

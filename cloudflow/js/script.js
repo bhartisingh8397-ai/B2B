@@ -448,9 +448,68 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   };
 
-  checkUserSession();
+  /* --------------------------------------------------------------------------
+     11. Interactive Dashboard Mockup Sidebar & AI Prompt Pills
+     -------------------------------------------------------------------------- */
+  const dashSideItems = document.querySelectorAll('.side-item[data-dash-tab]');
+  const dashViews = document.querySelectorAll('.dash-view');
+  const windowTitle = document.querySelector('.window-title');
 
-  function showStatus(element, msg, isSuccess, type) {
+  const titleMap = {
+    'dash-revenue': 'app.cloudflowcrm.com/dashboard/analytics',
+    'dash-pipeline': 'app.cloudflowcrm.com/pipeline/kanban',
+    'dash-ai': 'app.cloudflowcrm.com/copilot/assistants',
+    'dash-integrations': 'app.cloudflowcrm.com/integrations/connected'
+  };
+
+  dashSideItems.forEach(item => {
+    item.addEventListener('click', () => {
+      const targetTab = item.getAttribute('data-dash-tab');
+
+      // Active sidebar button toggle
+      dashSideItems.forEach(btn => btn.classList.remove('active'));
+      item.classList.add('active');
+
+      // Active view panel toggle
+      dashViews.forEach(view => view.classList.remove('active'));
+      const activeView = document.getElementById(targetTab);
+      if (activeView) {
+        activeView.classList.add('active');
+      }
+
+      // Update mock URL
+      if (windowTitle && titleMap[targetTab]) {
+        windowTitle.textContent = titleMap[targetTab];
+      }
+    });
+  });
+
+  // AI Prompt Pills interactivity inside mockup
+  const promptPills = document.querySelectorAll('.ai-prompt-pill');
+  const aiOutputBox = document.getElementById('ai-output-box');
+
+  const promptOutputs = {
+    'followup': '"Hi Sarah, based on Vertex Graph\'s inquiry regarding enterprise SLA, I\'ve drafted a personalized proposal with our 99.9% uptime packet attached."',
+    'summary': '"📊 Zoom Call Summary: Client expressed high intent for 50 Enterprise seats. Key decision criteria: SOC2 compliance & Slack notification webhook."',
+    'objection': '"🛡️ SOC2 Security Reply: Attached CloudFlow\'s Type II SOC2 certificate and ISO-27001 data isolation compliance whitepaper."'
+  };
+
+  promptPills.forEach(pill => {
+    pill.addEventListener('click', () => {
+      const promptType = pill.getAttribute('data-prompt');
+
+      promptPills.forEach(p => p.classList.remove('active'));
+      pill.classList.add('active');
+
+      if (aiOutputBox && promptOutputs[promptType]) {
+        aiOutputBox.style.opacity = '0';
+        setTimeout(() => {
+          aiOutputBox.textContent = promptOutputs[promptType];
+          aiOutputBox.style.opacity = '1';
+        }, 150);
+      }
+    });
+  });
     if (!element) return;
     element.style.display = 'block';
     if (type === 'info') {
