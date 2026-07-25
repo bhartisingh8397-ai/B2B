@@ -11,8 +11,10 @@ env.bak/
 venv.bak/
 .venv
 
-# Environment & IDE
+# Environment & Database
 .env
+*.db
+cloudflow.db
 .vscode/
 .idea/
 .DS_Store

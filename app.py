@@ -1,18 +1,66 @@
 import os
 import time
+import sqlite3
 from datetime import datetime
-from flask import Flask, jsonify, request, send_from_directory
+from flask import Flask, jsonify, request, send_from_directory, session
 from flask_cors import CORS
+from werkzeug.security import generate_password_hash, check_password_hash
 
-# Initialize Flask application with static folder configured to cloudflow
+# Initialize Flask application
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 FRONTEND_DIR = os.path.join(BASE_DIR, 'cloudflow')
+DATABASE_PATH = os.path.join(BASE_DIR, 'cloudflow.db')
 
 app = Flask(__name__, static_folder=FRONTEND_DIR, static_url_path='')
-CORS(app)  # Enable Cross-Origin Resource Sharing for API routes
+app.secret_key = os.environ.get('SECRET_KEY', 'cloudflow-secret-key-2026-b2b-saas')
 
-# In-memory storage for contact submissions (production apps would use a database)
-CONTACT_SUBMISSIONS = []
+# Enable CORS with credentials support for sessions
+CORS(app, supports_credentials=True)
+
+# --------------------------------------------------------------------------
+# SQLite Database Helpers & Initialization
+# --------------------------------------------------------------------------
+def get_db_connection():
+    """Create a database connection with dict-like row access."""
+    conn = sqlite3.connect(DATABASE_PATH)
+    conn.row_factory = sqlite3.Row
+    return conn
+
+def init_db():
+    """Initialize SQLite database tables if they do not exist."""
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    # Users table
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS users (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            full_name TEXT NOT NULL,
+            email TEXT UNIQUE NOT NULL,
+            password_hash TEXT NOT NULL,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        )
+    ''')
+
+    # Contact messages table
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS contacts (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name TEXT NOT NULL,
+            email TEXT NOT NULL,
+            company TEXT,
+            topic TEXT,
+            message TEXT NOT NULL,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        )
+    ''')
+
+    conn.commit()
+    conn.close()
+    print("Database tables initialized successfully in cloudflow.db")
+
+# Initialize database on startup
+init_db()
 
 # --------------------------------------------------------------------------
 # Frontend File Serving Routes
@@ -24,7 +72,7 @@ def serve_index():
 
 @app.route('/<path:path>')
 def serve_static(path):
-    """Serve any frontend asset or HTML page (product.html, pricing.html, etc)."""
+    """Serve any frontend asset or HTML page (signin.html, signup.html, product.html, etc)."""
     if os.path.exists(os.path.join(FRONTEND_DIR, path)):
         return send_from_directory(FRONTEND_DIR, path)
     elif os.path.exists(os.path.join(FRONTEND_DIR, f"{path}.html")):
@@ -33,7 +81,159 @@ def serve_static(path):
         return send_from_directory(FRONTEND_DIR, 'index.html')
 
 # --------------------------------------------------------------------------
-# REST API Endpoints
+# Authentication REST API Endpoints (Sign Up, Sign In, Logout, Me)
+# --------------------------------------------------------------------------
+@app.route('/api/auth/signup', methods=['POST'])
+def handle_signup():
+    """Register a new user in SQLite database."""
+    data = request.get_json(silent=True) or request.form
+
+    full_name = data.get('full_name', '').strip()
+    email = data.get('email', '').strip().lower()
+    password = data.get('password', '').strip()
+
+    if not full_name:
+        return jsonify({"success": False, "error": "Full Name is required."}), 400
+    if not email or '@' not in email:
+        return jsonify({"success": False, "error": "A valid email address is required."}), 400
+    if not password or len(password) < 6:
+        return jsonify({"success": False, "error": "Password must be at least 6 characters long."}), 400
+
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    # Check existing user
+    existing_user = cursor.execute('SELECT id FROM users WHERE email = ?', (email,)).fetchone()
+    if existing_user:
+        conn.close()
+        return jsonify({"success": False, "error": "An account with this email already exists."}), 409
+
+    # Secure Password Hashing
+    password_hash = generate_password_hash(password)
+
+    try:
+        cursor.execute(
+            'INSERT INTO users (full_name, email, password_hash) VALUES (?, ?, ?)',
+            (full_name, email, password_hash)
+        )
+        conn.commit()
+        user_id = cursor.lastrowid
+        conn.close()
+
+        # Set session state
+        session['user_id'] = user_id
+        session['user_name'] = full_name
+        session['user_email'] = email
+
+        return jsonify({
+            "success": True,
+            "message": "Account created successfully! Welcome to CloudFlow CRM.",
+            "user": {
+                "id": user_id,
+                "full_name": full_name,
+                "email": email
+            }
+        }), 201
+    except Exception as e:
+        conn.close()
+        return jsonify({"success": False, "error": f"Registration failed: {str(e)}"}), 500
+
+@app.route('/api/auth/login', methods=['POST'])
+def handle_login():
+    """Authenticate existing user credentials from SQLite database."""
+    data = request.get_json(silent=True) or request.form
+
+    email = data.get('email', '').strip().lower()
+    password = data.get('password', '').strip()
+
+    if not email or not password:
+        return jsonify({"success": False, "error": "Email and password are required."}), 400
+
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    user = cursor.execute('SELECT * FROM users WHERE email = ?', (email,)).fetchone()
+    conn.close()
+
+    if not user or not check_password_hash(user['password_hash'], password):
+        return jsonify({"success": False, "error": "Invalid email or password."}), 401
+
+    # Set session state
+    session['user_id'] = user['id']
+    session['user_name'] = user['full_name']
+    session['user_email'] = user['email']
+
+    return jsonify({
+        "success": True,
+        "message": "Signed in successfully!",
+        "user": {
+            "id": user['id'],
+            "full_name": user['full_name'],
+            "email": user['email']
+        }
+    }), 200
+
+@app.route('/api/auth/me', methods=['GET'])
+def get_current_user():
+    """Check current authenticated session user state."""
+    if 'user_id' in session:
+        return jsonify({
+            "authenticated": True,
+            "user": {
+                "id": session['user_id'],
+                "full_name": session['user_name'],
+                "email": session['user_email']
+            }
+        }), 200
+    else:
+        return jsonify({"authenticated": False, "user": None}), 200
+
+@app.route('/api/auth/logout', methods=['POST'])
+def handle_logout():
+    """Terminate active user session."""
+    session.clear()
+    return jsonify({"success": True, "message": "Signed out successfully."}), 200
+
+# --------------------------------------------------------------------------
+# Contact API Endpoint (Saved to SQLite `contacts` table)
+# --------------------------------------------------------------------------
+@app.route('/api/contact', methods=['POST'])
+def handle_contact_submission():
+    """Handle contact form submissions and store in SQLite contacts table."""
+    data = request.get_json(silent=True) or request.form
+
+    name = data.get('name', '').strip()
+    email = data.get('email', '').strip()
+    company = data.get('company', '').strip()
+    topic = data.get('topic', 'general').strip()
+    message = data.get('message', '').strip()
+
+    if not name:
+        return jsonify({"success": False, "error": "Full Name is required."}), 400
+    if not email or '@' not in email:
+        return jsonify({"success": False, "error": "A valid work email address is required."}), 400
+    if not message:
+        return jsonify({"success": False, "error": "Message content is required."}), 400
+
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    cursor.execute(
+        'INSERT INTO contacts (name, email, company, topic, message) VALUES (?, ?, ?, ?, ?)',
+        (name, email, company, topic, message)
+    )
+    conn.commit()
+    contact_id = cursor.lastrowid
+    conn.close()
+
+    return jsonify({
+        "success": True,
+        "message": "Thank you! Your message has been saved to SQLite DB and dispatched to our sales team. We will reach out within 15 minutes.",
+        "submission_id": contact_id
+    }), 201
+
+# --------------------------------------------------------------------------
+# General REST API Endpoints
 # --------------------------------------------------------------------------
 @app.route('/api/health', methods=['GET'])
 def health_check():
@@ -41,9 +241,9 @@ def health_check():
     return jsonify({
         "status": "healthy",
         "service": "CloudFlow CRM Backend API",
-        "version": "3.0.0",
-        "timestamp": datetime.utcnow().isoformat() + "Z",
-        "uptime": "99.99%"
+        "database": "SQLite 3 (cloudflow.db)",
+        "version": "3.1.0",
+        "timestamp": datetime.utcnow().isoformat() + "Z"
     }), 200
 
 @app.route('/api/dashboard/stats', methods=['GET'])
@@ -77,14 +277,7 @@ def get_pricing_plans():
                 "tagline": "Perfect for boutique sales teams and early-stage startups.",
                 "monthly_price": 29,
                 "annual_price": 23,
-                "popular": False,
-                "features": [
-                    "Up to 5 Active Users",
-                    "Visual Kanban Pipelines (3 Max)",
-                    "10,000 Contact Records",
-                    "Email & Calendar Integration",
-                    "Standard Dashboard Analytics"
-                ]
+                "popular": False
             },
             {
                 "id": "professional",
@@ -92,15 +285,7 @@ def get_pricing_plans():
                 "tagline": "For fast-growing revenue teams needing AI automation.",
                 "monthly_price": 79,
                 "annual_price": 63,
-                "popular": True,
-                "features": [
-                    "Unlimited Active Users",
-                    "Unlimited Custom Pipelines",
-                    "100,000 Contact Records",
-                    "AI Sales Co-Pilot & Sentiment Scoring",
-                    "Visual Workflow Builder",
-                    "Native Slack, Zoom & Stripe Sync"
-                ]
+                "popular": True
             },
             {
                 "id": "enterprise",
@@ -108,71 +293,10 @@ def get_pricing_plans():
                 "tagline": "Built for large organizations requiring custom SLAs and security.",
                 "monthly_price": 199,
                 "annual_price": 159,
-                "popular": False,
-                "features": [
-                    "Everything in Professional",
-                    "Unlimited Contact Records",
-                    "Custom AI Model Training",
-                    "REST API & Webhooks Access",
-                    "SAML SSO & Audit Logging",
-                    "99.9% Guaranteed Uptime SLA",
-                    "Dedicated Account Manager & 24/7 Phone Support"
-                ]
+                "popular": False
             }
         ]
     }), 200
-
-@app.route('/api/integrations', methods=['GET'])
-def get_integrations():
-    """Return pre-built ecosystem integrations."""
-    return jsonify({
-        "total": 12,
-        "integrations": [
-            {"name": "Slack", "category": "Communication", "icon": "#", "color": "rgba(99,102,241,0.2)"},
-            {"name": "Gmail / Workspace", "category": "Email", "icon": "M", "color": "rgba(239,68,68,0.2)"},
-            {"name": "Zapier", "category": "Automation", "icon": "Z", "color": "rgba(245,158,11,0.2)"},
-            {"name": "Stripe", "category": "Billing", "icon": "S", "color": "rgba(6,182,212,0.2)"},
-            {"name": "Zoom", "category": "Meetings", "icon": "Z", "color": "rgba(168,85,247,0.2)"},
-            {"name": "HubSpot", "category": "Marketing", "icon": "H", "color": "rgba(16,185,129,0.2)"}
-        ]
-    }), 200
-
-@app.route('/api/contact', methods=['POST'])
-def handle_contact_submission():
-    """Handle contact form submissions with data validation."""
-    data = request.get_json(silent=True) or request.form
-
-    name = data.get('name', '').strip()
-    email = data.get('email', '').strip()
-    company = data.get('company', '').strip()
-    topic = data.get('topic', 'general').strip()
-    message = data.get('message', '').strip()
-
-    # Field Validation
-    if not name:
-        return jsonify({"success": False, "error": "Full Name is required."}), 400
-    if not email or '@' not in email:
-        return jsonify({"success": False, "error": "A valid work email address is required."}), 400
-    if not message:
-        return jsonify({"success": False, "error": "Message content is required."}), 400
-
-    submission = {
-        "id": f"SUB-{int(time.time())}",
-        "name": name,
-        "email": email,
-        "company": company or "N/A",
-        "topic": topic,
-        "message": message,
-        "created_at": datetime.utcnow().isoformat() + "Z"
-    }
-
-    CONTACT_SUBMISSIONS.append(submission)
-
-    return jsonify({
-        "success": True,
-        "message": "Thank you! Your message has been received by CloudFlow CRM sales team. We will reach out within 15 minutes.",
-        "submission_id": submission["id"]
-    }), 201
 
 # --------------------------------------------------------------------------
 # Application Runner

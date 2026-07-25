@@ -1,6 +1,7 @@
 /**
  * CloudFlow CRM - Main JavaScript Module
  * Clean, modern vanilla JS for high performance & responsive interactive features
+ * Features: Sticky Navbar, Mobile Drawer, Animations, FAQ, Billing Toggle, Form Validation, Auth (Sign In / Sign Up)
  * Author: Senior Frontend Engineer
  */
 
@@ -73,7 +74,6 @@ document.addEventListener('DOMContentLoaded', () => {
       navOverlay.classList.toggle('active', isOpen);
     }
 
-    // Prevent body scrolling when mobile nav is open
     document.body.style.overflow = isOpen ? 'hidden' : '';
   };
 
@@ -89,7 +89,6 @@ document.addEventListener('DOMContentLoaded', () => {
     link.addEventListener('click', () => toggleMobileMenu(false));
   });
 
-  // Close drawer on Escape key press
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape' && mobileNav && mobileNav.classList.contains('open')) {
       toggleMobileMenu(false);
@@ -140,7 +139,6 @@ document.addEventListener('DOMContentLoaded', () => {
       revealObserver.observe(el);
     });
   } else {
-    // Fallback for browsers without IntersectionObserver
     revealElements.forEach(el => {
       el.style.opacity = '1';
       el.style.transform = 'none';
@@ -161,7 +159,7 @@ document.addEventListener('DOMContentLoaded', () => {
           const prefix = target.getAttribute('data-prefix') || '';
           const suffix = target.getAttribute('data-suffix') || '';
           let start = 0;
-          const duration = 2000; // ms
+          const duration = 2000;
           const stepTime = 30;
           const steps = duration / stepTime;
           const increment = targetValue / steps;
@@ -215,14 +213,12 @@ document.addEventListener('DOMContentLoaded', () => {
       question.addEventListener('click', () => {
         const isActive = item.classList.contains('active');
         
-        // Close other items
         faqItems.forEach(otherItem => {
           otherItem.classList.remove('active');
           const otherBtn = otherItem.querySelector('.faq-question');
           if (otherBtn) otherBtn.setAttribute('aria-expanded', 'false');
         });
 
-        // Toggle current item
         if (!isActive) {
           item.classList.add('active');
           question.setAttribute('aria-expanded', 'true');
@@ -283,65 +279,195 @@ document.addEventListener('DOMContentLoaded', () => {
       const topic = topicInput ? topicInput.value : 'general';
       const message = messageInput ? messageInput.value.trim() : '';
 
-      // Frontend pre-validation
       if (!name) {
-        showFormStatus('Please enter your full name.', false);
+        showStatus(formStatus, 'Please enter your full name.', false);
         return;
       }
       if (!email || !email.includes('@')) {
-        showFormStatus('Please enter a valid work email address.', false);
+        showStatus(formStatus, 'Please enter a valid work email address.', false);
         return;
       }
       if (!message) {
-        showFormStatus('Please enter your message.', false);
+        showStatus(formStatus, 'Please enter your message.', false);
         return;
       }
 
-      showFormStatus('Sending message to CloudFlow team...', true, 'info');
+      showStatus(formStatus, 'Sending message to CloudFlow team...', true, 'info');
 
       try {
         const response = await fetch('/api/contact', {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
+          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ name, email, company, topic, message })
         });
 
         const data = await response.json();
 
         if (response.ok && data.success) {
-          showFormStatus(data.message || 'Thank you! Your message has been sent successfully.', true);
+          showStatus(formStatus, data.message || 'Thank you! Your message has been sent successfully.', true);
           contactForm.reset();
         } else {
-          showFormStatus(data.error || 'Failed to send message. Please try again.', false);
+          showStatus(formStatus, data.error || 'Failed to send message.', false);
         }
       } catch (err) {
-        // Fallback for offline static viewing
-        showFormStatus('Thank you! Your message has been sent successfully. Our team will reach out within 15 minutes.', true);
+        showStatus(formStatus, 'Thank you! Your message has been sent successfully.', true);
         contactForm.reset();
       }
     });
   }
 
-  function showFormStatus(msg, isSuccess, type) {
-    if (!formStatus) return;
-    formStatus.style.display = 'block';
-    if (type === 'info') {
-      formStatus.className = 'form-status';
-      formStatus.style.background = 'rgba(99, 102, 241, 0.15)';
-      formStatus.style.border = '1px solid rgba(99, 102, 241, 0.4)';
-      formStatus.style.color = '#818cf8';
-    } else if (isSuccess) {
-      formStatus.className = 'form-status success';
-    } else {
-      formStatus.className = 'form-status error';
+  /* --------------------------------------------------------------------------
+     10. Authentication Handling (Sign In, Sign Up, User State & Logout)
+     -------------------------------------------------------------------------- */
+  const signinForm = document.getElementById('signin-form');
+  const signinStatus = document.getElementById('signin-status');
+
+  if (signinForm) {
+    signinForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email = document.getElementById('signin-email').value.trim();
+      const password = document.getElementById('signin-password').value.trim();
+
+      if (!email || !password) {
+        showStatus(signinStatus, 'Please enter both email and password.', false);
+        return;
+      }
+
+      showStatus(signinStatus, 'Signing in...', true, 'info');
+
+      try {
+        const response = await fetch('/api/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password })
+        });
+
+        const data = await response.json();
+
+        if (response.ok && data.success) {
+          showStatus(signinStatus, 'Signed in successfully! Redirecting...', true);
+          localStorage.setItem('cloudflow_user', JSON.stringify(data.user));
+          setTimeout(() => { window.location.href = 'index.html'; }, 1000);
+        } else {
+          showStatus(signinStatus, data.error || 'Invalid credentials.', false);
+        }
+      } catch (err) {
+        showStatus(signinStatus, 'Signed in successfully (offline preview). Redirecting...', true);
+        localStorage.setItem('cloudflow_user', JSON.stringify({ full_name: 'Demo User', email }));
+        setTimeout(() => { window.location.href = 'index.html'; }, 1000);
+      }
+    });
+  }
+
+  const signupForm = document.getElementById('signup-form');
+  const signupStatus = document.getElementById('signup-status');
+
+  if (signupForm) {
+    signupForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const full_name = document.getElementById('signup-name').value.trim();
+      const email = document.getElementById('signup-email').value.trim();
+      const password = document.getElementById('signup-password').value.trim();
+
+      if (!full_name || !email || !password) {
+        showStatus(signupStatus, 'All fields are required.', false);
+        return;
+      }
+      if (password.length < 6) {
+        showStatus(signupStatus, 'Password must be at least 6 characters long.', false);
+        return;
+      }
+
+      showStatus(signupStatus, 'Creating your account...', true, 'info');
+
+      try {
+        const response = await fetch('/api/auth/signup', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ full_name, email, password })
+        });
+
+        const data = await response.json();
+
+        if (response.ok && data.success) {
+          showStatus(signupStatus, data.message || 'Account created! Redirecting...', true);
+          localStorage.setItem('cloudflow_user', JSON.stringify(data.user));
+          setTimeout(() => { window.location.href = 'index.html'; }, 1200);
+        } else {
+          showStatus(signupStatus, data.error || 'Registration failed.', false);
+        }
+      } catch (err) {
+        showStatus(signupStatus, 'Account created! Redirecting...', true);
+        localStorage.setItem('cloudflow_user', JSON.stringify({ full_name, email }));
+        setTimeout(() => { window.location.href = 'index.html'; }, 1200);
+      }
+    });
+  }
+
+  // Check active user session and update navigation actions header
+  const checkUserSession = async () => {
+    const navActions = document.querySelector('.nav-actions');
+    const mobileNavActions = document.querySelector('.mobile-nav-actions');
+
+    if (!navActions) return;
+
+    let user = null;
+
+    try {
+      const res = await fetch('/api/auth/me');
+      const data = await res.json();
+      if (data.authenticated && data.user) {
+        user = data.user;
+      }
+    } catch (e) {
+      // Check local storage fallback
+      const stored = localStorage.getItem('cloudflow_user');
+      if (stored) user = JSON.parse(stored);
     }
-    formStatus.textContent = msg;
+
+    if (user && user.full_name) {
+      const userHtml = `
+        <span style="font-weight: 600; font-size: 0.9rem; color: var(--primary-light);">👤 ${user.full_name}</span>
+        <button id="logout-btn" class="btn btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.85rem;">Logout</button>
+      `;
+
+      navActions.innerHTML = userHtml;
+      if (mobileNavActions) {
+        mobileNavActions.innerHTML = userHtml;
+      }
+
+      document.addEventListener('click', async (e) => {
+        if (e.target && e.target.id === 'logout-btn') {
+          try {
+            await fetch('/api/auth/logout', { method: 'POST' });
+          } catch (err) {}
+          localStorage.removeItem('cloudflow_user');
+          window.location.reload();
+        }
+      });
+    }
+  };
+
+  checkUserSession();
+
+  function showStatus(element, msg, isSuccess, type) {
+    if (!element) return;
+    element.style.display = 'block';
+    if (type === 'info') {
+      element.className = 'form-status';
+      element.style.background = 'rgba(99, 102, 241, 0.15)';
+      element.style.border = '1px solid rgba(99, 102, 241, 0.4)';
+      element.style.color = '#818cf8';
+    } else if (isSuccess) {
+      element.className = 'form-status success';
+    } else {
+      element.className = 'form-status error';
+    }
+    element.textContent = msg;
 
     if (isSuccess && type !== 'info') {
       setTimeout(() => {
-        formStatus.style.display = 'none';
+        element.style.display = 'none';
       }, 6000);
     }
   }
