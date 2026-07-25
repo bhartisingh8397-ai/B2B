@@ -818,15 +818,23 @@ button {
   display: flex;
   align-items: center;
   gap: 0.6rem;
-  font-size: 1.25rem;
+  font-size: 1.15rem;
   font-weight: 800;
-  color: var(--text-subtle);
-  opacity: 0.75;
-  transition: opacity var(--transition-fast);
+  opacity: 1 !important;
+  transition: transform var(--transition-fast);
 }
 
-.company-logo:hover { opacity: 1; color: var(--text-main); }
-.company-logo svg { width: 28px; height: 28px; fill: currentColor; }
+.company-logo:hover {
+  transform: scale(1.08);
+}
+
+.company-logo svg { width: 26px; height: 26px; fill: currentColor; }
+
+.logo-vertex { color: #0d9488 !important; }
+.logo-novasphere { color: #6366f1 !important; }
+.logo-apex { color: #d97706 !important; }
+.logo-synthetix { color: #2563eb !important; }
+.logo-acme { color: #dc2626 !important; }
 
 /* --------------------------------------------------------------------------
    7. Features Grid & Cards
